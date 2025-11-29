@@ -1,5 +1,41 @@
+import { Metadata } from "next";
+import { getTranslations } from "next-intl/server";
 import { useTranslations } from "next-intl";
 import SalaryCalculator from "@/components/calculators/SalaryCalculator";
+import { generateSEOMetadata, commonKeywords } from "@/lib/seo";
+
+export async function generateMetadata({
+    params,
+}: {
+    params: Promise<{ locale: string }>;
+}): Promise<Metadata> {
+    const { locale } = await params;
+    const t = await getTranslations({ locale, namespace: "Tools" });
+
+    const keywords = [
+        ...(commonKeywords[locale as keyof typeof commonKeywords] || commonKeywords.en),
+        locale === "ko"
+            ? "급여계산기"
+            : "salary calculator",
+        locale === "ko"
+            ? "실수령액"
+            : "net pay",
+        locale === "ko"
+            ? "4대보험"
+            : "4 major insurances",
+        locale === "ko"
+            ? "소득세"
+            : "income tax",
+    ];
+
+    return generateSEOMetadata({
+        title: `${t("salaryCalculator")} | K-Life Tools`,
+        description: t("salaryDesc"),
+        path: "/tools/salary-calculator",
+        locale,
+        keywords,
+    });
+}
 
 export default function SalaryCalculatorPage() {
     const t = useTranslations("Tools");

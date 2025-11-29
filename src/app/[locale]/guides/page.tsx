@@ -1,8 +1,31 @@
+import { Metadata } from "next";
 import { getTranslations } from "next-intl/server";
 import { Link } from "@/i18n/routing";
 import { getAllGuides } from "@/lib/mdx";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { format } from "date-fns";
+import { generateSEOMetadata, commonKeywords } from "@/lib/seo";
+
+export async function generateMetadata({
+    params,
+}: {
+    params: Promise<{ locale: string }>;
+}): Promise<Metadata> {
+    const { locale } = await params;
+    const t = await getTranslations({ locale, namespace: "Navigation" });
+
+    return generateSEOMetadata({
+        title: `${t("guides")} | K-Life Tools`,
+        description: t("guidesDesc"),
+        path: "/guides",
+        locale,
+        keywords: [
+            ...(commonKeywords[locale as keyof typeof commonKeywords] || commonKeywords.en),
+            locale === "ko" ? "가이드" : "guides",
+            locale === "ko" ? "한국생활정보" : "Korea living guide",
+        ],
+    });
+}
 
 export default async function GuidesPage({
     params,

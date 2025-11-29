@@ -1,6 +1,34 @@
+import { Metadata } from "next";
+import { getTranslations } from "next-intl/server";
 import { useTranslations } from "next-intl";
 import ExchangeCalculator from "@/components/calculators/ExchangeCalculator";
 import { Info, Lightbulb } from "lucide-react";
+import { generateSEOMetadata, commonKeywords } from "@/lib/seo";
+
+export async function generateMetadata({
+    params,
+}: {
+    params: Promise<{ locale: string }>;
+}): Promise<Metadata> {
+    const { locale } = await params;
+    const t = await getTranslations({ locale, namespace: "Tools" });
+
+    const keywords = [
+        ...(commonKeywords[locale as keyof typeof commonKeywords] || commonKeywords.en),
+        locale === "ko" ? "환율계산기" : "exchange rate calculator",
+        locale === "ko" ? "환전" : "currency exchange",
+        locale === "ko" ? "만원" : "Korean won",
+        "USD", "EUR", "JPY", "CNY",
+    ];
+
+    return generateSEOMetadata({
+        title: `${t("exchangeCalculator")} | K-Life Tools`,
+        description: t("exchangeDesc"),
+        path: "/tools/exchange-calculator",
+        locale,
+        keywords,
+    });
+}
 
 export default function ExchangeCalculatorPage() {
     const t = useTranslations("Tools");

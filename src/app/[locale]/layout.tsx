@@ -1,19 +1,34 @@
 import type { Metadata } from "next";
+import { Analytics } from "@vercel/analytics/react";
 import { Inter } from "next/font/google";
 import "../globals.css";
 import { NextIntlClientProvider } from "next-intl";
-import { getMessages } from "next-intl/server";
+import { getMessages, getTranslations } from "next-intl/server";
 import { notFound } from "next/navigation";
 import { routing } from "@/i18n/routing";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+import { generateSEOMetadata, commonKeywords } from "@/lib/seo";
+import { WebsiteSchema, OrganizationSchema } from "@/components/StructuredData";
 
 const inter = Inter({ subsets: ["latin"] });
 
-export const metadata: Metadata = {
-    title: "K-Life Tools",
-    description: "Korea Expat Calculator Hub",
-};
+export async function generateMetadata({
+    params,
+}: {
+    params: Promise<{ locale: string }>;
+}): Promise<Metadata> {
+    const { locale } = await params;
+    const t = await getTranslations({ locale, namespace: "Metadata" });
+
+    return generateSEOMetadata({
+        title: t("title"),
+        description: t("description"),
+        path: "",
+        locale,
+        keywords: commonKeywords[locale as keyof typeof commonKeywords] || commonKeywords.en,
+    });
+}
 
 export default async function LocaleLayout({
     children,
@@ -43,6 +58,9 @@ export default async function LocaleLayout({
                         <Footer />
                     </div>
                 </NextIntlClientProvider>
+                <WebsiteSchema locale={locale} />
+                <OrganizationSchema locale={locale} />
+                <Analytics />
             </body>
         </html>
     );

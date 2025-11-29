@@ -1,5 +1,33 @@
+import { Metadata } from "next";
+import { getTranslations } from "next-intl/server";
 import { useTranslations } from "next-intl";
 import UnitConverter from "@/components/calculators/UnitConverter";
+import { generateSEOMetadata, commonKeywords } from "@/lib/seo";
+
+export async function generateMetadata({
+    params,
+}: {
+    params: Promise<{ locale: string }>;
+}): Promise<Metadata> {
+    const { locale } = await params;
+    const t = await getTranslations({ locale, namespace: "Tools" });
+
+    const keywords = [
+        ...(commonKeywords[locale as keyof typeof commonKeywords] || commonKeywords.en),
+        locale === "ko" ? "평수계산기" : "pyeong calculator",
+        locale === "ko" ? "부동산" : "real estate",
+        locale === "ko" ? "제곱미터" : "square meters",
+        locale === "ko" ? "아파트" : "apartment",
+    ];
+
+    return generateSEOMetadata({
+        title: `${t("unitConverter")} | K-Life Tools`,
+        description: t("unitDesc"),
+        path: "/tools/unit-converter",
+        locale,
+        keywords,
+    });
+}
 
 export default function UnitConverterPage() {
     const t = useTranslations("Tools");

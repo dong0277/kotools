@@ -1,0 +1,14 @@
+<svg width="32" height="32" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="iconGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#3b82f6;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#8b5cf6;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  
+  <!-- Background -->
+  <rect width="32" height="32" rx="6" fill="url(#iconGradient)"/>
+  
+  <!-- K letter -->
+  <path d="M 10 8 L 12 8 L 12 14 L 18 8 L 21 8 L 15 14 L 21 24 L 18 24 L 12 16 L 12 24 L 10 24 Z" fill="white"/>
+</svg>

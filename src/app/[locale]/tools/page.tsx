@@ -1,6 +1,26 @@
+import { Metadata } from "next";
+import { getTranslations } from "next-intl/server";
 import { useTranslations } from "next-intl";
 import { Link } from "@/i18n/routing";
 import { Calculator, Coins, Calendar, Building2 } from "lucide-react";
+import { generateSEOMetadata, commonKeywords } from "@/lib/seo";
+
+export async function generateMetadata({
+    params,
+}: {
+    params: Promise<{ locale: string }>;
+}): Promise<Metadata> {
+    const { locale } = await params;
+    const t = await getTranslations({ locale, namespace: "Tools" });
+
+    return generateSEOMetadata({
+        title: `${locale === "ko" ? "도구" : "Tools"} | K-Life Tools`,
+        description: t("essentialTools"),
+        path: "/tools",
+        locale,
+        keywords: commonKeywords[locale as keyof typeof commonKeywords] || commonKeywords.en,
+    });
+}
 
 export default function ToolsPage() {
     const t = useTranslations("Tools");

@@ -1,5 +1,33 @@
+import { Metadata } from "next";
+import { getTranslations } from "next-intl/server";
 import { useTranslations } from "next-intl";
 import VisaCalculator from "@/components/calculators/VisaCalculator";
+import { generateSEOMetadata, commonKeywords } from "@/lib/seo";
+
+export async function generateMetadata({
+    params,
+}: {
+    params: Promise<{ locale: string }>;
+}): Promise<Metadata> {
+    const { locale } = await params;
+    const t = await getTranslations({ locale, namespace: "Tools" });
+
+    const keywords = [
+        ...(commonKeywords[locale as keyof typeof commonKeywords] || commonKeywords.en),
+        locale === "ko" ? "비자만료일" : "visa expiry",
+        locale === "ko" ? "체류기간" : "stay duration",
+        locale === "ko" ? "D-Day" : "D-Day",
+        locale === "ko" ? "출입국" : "immigration",
+    ];
+
+    return generateSEOMetadata({
+        title: `${t("visaCalculator")} | K-Life Tools`,
+        description: t("visaDesc"),
+        path: "/tools/visa-expiry",
+        locale,
+        keywords,
+    });
+}
 
 export default function VisaCalculatorPage() {
     const t = useTranslations("Tools");

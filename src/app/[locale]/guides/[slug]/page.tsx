@@ -1,3 +1,4 @@
+import { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { MDXRemote } from "next-mdx-remote/rsc";
 import { getGuideBySlug, getAllGuideSlugs } from "@/lib/mdx";
@@ -5,10 +6,37 @@ import { format } from "date-fns";
 import { Link } from "@/i18n/routing";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft } from "lucide-react";
+import { generateSEOMetadata, commonKeywords } from "@/lib/seo";
 
 export async function generateStaticParams({ params: { locale } }: { params: { locale: string } }) {
     const slugs = getAllGuideSlugs(locale);
     return slugs.map((slug) => ({ slug }));
+}
+
+export async function generateMetadata({
+    params,
+}: {
+    params: Promise<{ locale: string; slug: string }>;
+}): Promise<Metadata> {
+    const { locale, slug } = await params;
+    const guide = getGuideBySlug(slug, locale);
+
+    if (!guide) {
+        return {
+            title: "Guide Not Found | K-Life Tools",
+        };
+    }
+
+    return generateSEOMetadata({
+        title: `${guide.title} | K-Life Tools`,
+        description: guide.description || guide.title,
+        path: `/guides/${slug}`,
+        locale,
+        keywords: [
+            ...(commonKeywords[locale as keyof typeof commonKeywords] || commonKeywords.en),
+            ...guide.tags,
+        ],
+    });
 }
 
 export default async function GuidePage({

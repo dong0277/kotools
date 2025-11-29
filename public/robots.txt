@@ -1,0 +1,23 @@
+# *
+User-agent: *
+Allow: /
+
+# Sitemaps
+Sitemap: https://kotools.vercel.app/sitemap.xml
+
+# Disallow admin or private paths (if any in the future)
+# Disallow: /admin
+# Disallow: /api
+
+# Allow all crawlers to access public content
+User-agent: Googlebot
+Allow: /
+
+User-agent: Bingbot
+Allow: /
+
+User-agent: Yandex
+Allow: /
+
+User-agent: Baiduspider
+Allow: /
