@@ -72,7 +72,7 @@ export function generateSEOMetadata({
             },
         },
         verification: {
-            google: 'your-google-verification-code',
+            google: 'lEQk04cuQcPzEtpPrfIZGV2zAzJ8vCuUaZtkTuYu9VI',
             // yandex: 'your-yandex-verification-code',
             // bing: 'your-bing-verification-code',
         },
